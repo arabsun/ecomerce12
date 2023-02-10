@@ -21,16 +21,6 @@ class AdminLoginController extends Controller
     {
         return view('admin.auth.login');
     }
-    public function insert()
-    {
-        Admin::create([
-            'first_name'=>'admin',
-            'username'=>'admin',
-            'password'=>Hash::make('123123'),
-            'role_id'=>1
-        ]);
-        return 'done';
-    }
 
     /**
      * @param array $middleware

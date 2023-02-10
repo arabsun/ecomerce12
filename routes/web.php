@@ -28,16 +28,31 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 
-Route::group(['middleware' => 'guest'], function () {
-    Route::get('admin-login',[AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::get('/insert',[AdminLoginController::class, 'insert'])->name('insert');
-    Route::post('admin/auth',[AdminLoginController::class, 'loginAdmin'])->name('admin.auth');
+
+// Admin Panel
+
+Route::prefix(env('ADMIN_NAME'))->group(function () {
+    Route::get('/login',                    [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/auth',            [AdminLoginController::class, 'login'])->name('admin.auth');
+
+
+    Route::group(['middleware' => ['is.admin']], function () {
+
+        Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/logout',[AdminLoginController::class, 'logout'])->name('admin.logout');
+        Route::get('/dashboard', [AdminController::class, 'aaa'])->name('admin.main');
+        Route::get('/profile',                  [AdminController::class, 'profile'])->name('admin.profile');
+        Route::post('/profile/update',          [AdminController::class, 'profileUpdate'])->name('admin.profile.update');
+        Route::get('/password',                 [AdminController::class, 'password'])->name('admin.password');
+        Route::post('/password/update',         [AdminController::class, 'passwordUpdate'])->name('admin.password.update');
+
+    });
+
 });
-Route::group(['middleware' => 'is.admin','prefix'=>'backend'], function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/logout',[AdminLoginController::class, 'logout'])->name('admin.logout');
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-});
+
+
+
+
 
 Route::get('/clear', function() {
 

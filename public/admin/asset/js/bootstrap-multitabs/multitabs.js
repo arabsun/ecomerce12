@@ -3,7 +3,7 @@ if (typeof jQuery === "undefined") {
     throw new Error("MultiTabs requires jQuery");
 }((function ($) {
     "use strict";
-    var NAMESPACE; //variable
+    var NAMESPACE, tabIndex; //variable
     var MultiTabs, handler, getTabIndex, isExtUrl, sumDomWidth, trimText, supportStorage; //function
     var defaultLayoutTemplates, defaultInit; //default variable
 
@@ -24,18 +24,16 @@ if (typeof jQuery === "undefined") {
 
     /**
      * get index for tab
-     * @param content content type, for 'main' tab just can be 1
-     * @param url
-     * @returns string return index
+     * @param content   content type, for 'main' tab just can be 1
+     * @param capacity  capacity of tab, except 'main' tab
+     * @returns int     return index
      */
-    getTabIndex = function (content, url) {
+    getTabIndex = function (content, capacity) {
         if (content === 'main') return 0;
-        
-        var tabIndex = window.btoa(url);
-        tabIndex = tabIndex.replace(/\+/g, "_43");
-        tabIndex = tabIndex.replace(/\//g, "_47");
-        tabIndex = tabIndex.replace(/=/g, "_61");
-
+        capacity = capacity || 8; //capacity of maximum tab quantity, the tab will be cover if more than it
+        tabIndex = tabIndex || 0;
+        tabIndex++;
+        tabIndex = tabIndex % capacity;
         return tabIndex;
     };
 
@@ -105,7 +103,7 @@ if (typeof jQuery === "undefined") {
             '<div class="mt-nav-bar {navClass}" style="background-color: {backgroundColor};">' +
             '<div class="mt-nav mt-nav-tools-left">' +
             '<ul  class="nav {nav-tabs}">' +
-            '<li class="mt-move-left"><a><i class="mdi mdi-skip-backward"></i></a></li>' +
+            '<li class="nav-item mt-move-left"><a class="nav-link"><i class="mdi mdi-skip-backward"></i></a></li>' +
             '</ul>' +
             '</div>' +
             '<nav class="mt-nav mt-nav-panel">' +
@@ -113,14 +111,14 @@ if (typeof jQuery === "undefined") {
             '</nav>' +
             '<div class="mt-nav mt-nav-tools-right">' +
             '<ul  class="nav {nav-tabs}">' +
-            '<li class="mt-move-right"><a><i class="mdi mdi-skip-forward"></i></a></li>' +
-            '<li class="mt-dropdown dropdown">' +
-            '<a href="#"  class="dropdown-toggle" data-toggle="dropdown">{dropdown}<span class="caret"></span></a>' +
+            '<li class="nav-item mt-move-right"><a class="nav-link"><i class="mdi mdi-skip-forward"></i></a></li>' +
+            '<li class="nav-item mt-dropdown dropdown">' +
+            '<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{dropdown}<span class="caret"></span></a>' +
             '<ul role="menu" class="dropdown-menu dropdown-menu-right">' +
-            '<li class="mt-show-actived-tab"><a>{showActivedTab}</a></li>' +
-            '<li class="divider"></li>' +
-            '<li class="mt-close-all-tabs"><a>{closeAllTabs}</a></li>' +
-            '<li class="mt-close-other-tabs"><a>{closeOtherTabs}</a></li>' +
+            '<li class="mt-show-actived-tab"><a class="dropdown-item">{showActivedTab}</a></li>' +
+            '<li class="dropdown-divider"></li>' +
+            '<li class="mt-close-all-tabs"><a class="dropdown-item">{closeAllTabs}</a></li>' +
+            '<li class="mt-close-other-tabs"><a class="dropdown-item">{closeOtherTabs}</a></li>' +
             '</ul>' +
             '</li>' +
             '</ul>' +
@@ -136,7 +134,7 @@ if (typeof jQuery === "undefined") {
             '<div class="mt-nav mt-nav-tools-right">' +
             '<ul  class="nav {nav-tabs}">' +
             '<li class="mt-dropdown dropdown">' +
-            '<a href="#"  class="dropdown-toggle" data-toggle="dropdown">{dropdown}<span class="caret"></span></a>' +
+            '<a href="#"  class="dropdown-toggle dropdown-item" data-toggle="dropdown">{dropdown}<span class="caret"></span></a>' +
             '<ul role="menu" class="mt-hidden-list dropdown-menu dropdown-menu-right"></ul>' +
             '</li>' +
             '</ul>' +
@@ -152,7 +150,7 @@ if (typeof jQuery === "undefined") {
             '</div>' +
             '<div class="tab-content mt-tab-content " > </div>' +
             '</div>',
-        navTab: '<a data-id="{navTabId}" class="mt-nav-tab" data-type="{type}" data-index="{index}" data-url="{url}">{title}</a>',
+        navTab: '<a data-id="{navTabId}" class="nav-link mt-nav-tab" data-type="{type}" data-index="{index}" data-url="{url}">{title}</a>',
         closeBtn: ' <i class="mt-close-tab mdi mdi-close" style="{style}"></i>',
         ajaxTabPane: '<div id="{tabPaneId}" class="tab-pane {class}">{content}</div>',
         iframeTabPane: '<iframe id="{tabPaneId}" class="tab-pane {class}"  width="100%" height="100%" frameborder="0" src="" seamless></iframe>'
@@ -202,7 +200,7 @@ if (typeof jQuery === "undefined") {
                 return this; //return multitabs obj when is invaid obj
             }
             $navTab = this._exist(param)
-            if ($navTab && !param.refresh) {
+            if ($navTab && !param.isNewTab) {
                 this.active($navTab);
                 return this;
             }
@@ -271,7 +269,7 @@ if (typeof jQuery === "undefined") {
                 $navTabLi.html(navTabHtml);
                 self._getTabPane($navTabLi.find('a:first')).remove(); //remove old content pane directly
             } else {
-                $el.navPanelList.append('<li>' + navTabHtml + '</li>');
+                $el.navPanelList.append('<li class="nav-item">' + navTabHtml + '</li>');
             }
             return $el.navPanelList.find('a[data-type="' + param.type + '"][data-index="' + param.index + '"]:first');
 
@@ -316,12 +314,13 @@ if (typeof jQuery === "undefined") {
          * @param navTab
          * @returns self      Chain structure.
          */
-        active: function (navTab) {
+        active: function (navTab, isNavBar) {
             var self = this,
                 $el = self.$element;
+                isNavBar = (isNavBar == false) ? false : true;
             var $navTab = self._getNavTab(navTab),
                 $tabPane = self._getTabPane($navTab),
-                $prevActivedTab = $el.navPanelList.find('li.active:first a');
+                $prevActivedTab = $el.navPanelList.find('li a.active');
             var prevNavTabParam = $prevActivedTab.length ? self._getParam($prevActivedTab) : {};
             var navTabParam = $navTab.length ? self._getParam($navTab) : {};
             //change storage active status
@@ -334,14 +333,14 @@ if (typeof jQuery === "undefined") {
             }
             self._resetStorage(storage);
             //active navTab and tabPane
-            $prevActivedTab.parent('li').removeClass('active');
-            $navTab.parent('li').addClass('active');
+            $prevActivedTab.removeClass('active');
+            $navTab.addClass('active');
             self._fixTabPosition($navTab);
             self._getTabPane($prevActivedTab).removeClass('active');
             $tabPane.addClass('active');
             self._fixTabContentLayout($tabPane);
             //fill tab pane
-            self._fillTabPane($tabPane, navTabParam);
+            self._fillTabPane($tabPane, navTabParam, isNavBar);
             
             return self;
         },
@@ -349,14 +348,16 @@ if (typeof jQuery === "undefined") {
          * fill tab pane
          * @private
          */
-        _fillTabPane: function (tabPane, param) {
+        _fillTabPane: function (tabPane, param, isNavBar) {
             var self = this,
                 options = self.options;
             var $tabPane = $(tabPane);
             //if navTab-pane empty, load content
             if (!$tabPane.html()) {
                 if ($tabPane.is('iframe')) {
-                    if (!$tabPane.attr('src')) {
+                  
+                    //if (!$tabPane.attr('src')) {
+                    if ((!$tabPane.attr('src') && options.refresh == 'no') || (options.refresh == 'nav' && isNavBar) || options.refresh == 'all'){
                         $tabPane.attr('src', param.url);
                     }
                 } else {
@@ -464,7 +465,7 @@ if (typeof jQuery === "undefined") {
                 !self._unsaveConfirm()) {
                 return self;
             }
-            if ($navTabLi.hasClass("active")) {
+            if ($navTabLi.find('a').hasClass("active")) {
                 var $nextLi = $navTabLi.next("li:first"),
                     $prevLi = $navTabLi.prev("li:last");
                 //if ($nextLi.size()) {
@@ -493,7 +494,7 @@ if (typeof jQuery === "undefined") {
                 findTab;
             
             if (!retainTab) {
-                findTab = $el.navPanelList.find('li:not(.active)').find('a:not([data-type="main"])');
+                findTab = $el.navPanelList.find('li a:not([data-type="main"],.active)');
             } else {
                 findTab = $el.navPanelList.find('a:not([data-type="main"])').filter(function(index){
                     if (retainTab != $(this).data('index')) return this;
@@ -521,7 +522,7 @@ if (typeof jQuery === "undefined") {
         showActive: function () {
             var self = this,
                 $el = self.$element;
-            var navTab = $el.navPanelList.find('li.active:first a');
+            var navTab = $el.navPanelList.find('li a.active');
             self._fixTabPosition(navTab);
             return self;
         },
@@ -553,61 +554,57 @@ if (typeof jQuery === "undefined") {
                 $navHasSubnav = $navObj.parents('.nav-item'),
                 $viSubHeight  = $navHasSubnav.siblings().find('.nav-subnav:visible').outerHeight();
             
-            $('.nav-drawer .nav-item').not($navHasSubnav).each(function() {
-                if (window.innerWidth > 1024 && $('body').hasClass('lyear-layout-sidebar-close')) {
-                    $(this).find('.nav-subnav').hide();
+            $('.nav-item').each(function(i){
+                if ($(this).hasClass('active') && !$navObj.parents('.nav-item').last().hasClass('active')) {
+                    $(this).removeClass('active').removeClass('open');
+                    $(this).find('.nav-subnav:visible').slideUp(500);
+                    if (window.innerWidth > 1024 && $('body').hasClass('lyear-layout-sidebar-close')) {
+                        $(this).find('.nav-subnav').hide();
+                    }
                 }
-                $(this).find('.nav-subnav:visible').slideUp(500);
-                $(this).removeClass('active open');
             });
             
             $('.nav-drawer').find('li').removeClass('active');
             $navObj.parent('li').addClass('active');
-            $navHasSubnav.addClass('active');
+            $navHasSubnav.first().addClass('active');
             
             // 当前菜单无子菜单
             if (!$navObj.parents('.nav-item').first().is('.nav-item-has-subnav')) {
                 var hht = 48 * ( $navObj.parents('.nav-item').first().prevAll().length - 1 );
-                $('.lyear-layout-sidebar-scroll').animate({scrollTop: hht}, 300);
+                $('.lyear-layout-sidebar-info').animate({scrollTop: hht}, 300);
             }
             
-            var $sideDownObj = $navObj.parents('ul.nav-subnav').filter(':hidden');
-            var $sideDownLen = $sideDownObj.length;
-            
-            $sideDownObj.each(function(i) {
-                $(this).slideDown(500, function() {
-                    $(this).parent('.nav-item').addClass('open');
-                    
-                    if (i === $sideDownLen - 1) {
-		                var scrollHeight  = 0,
-                            $scrollBox    = $('.lyear-layout-sidebar-scroll'),
-		                    pervTotal     = $navHasSubnav.last().prevAll().length,
-		                    boxHeight     = $scrollBox.outerHeight(),
-	                        innerHeight   = $('.sidebar-main').outerHeight(),
-                            thisScroll    = $scrollBox.scrollTop(),
-                            thisSubHeight = $(this).outerHeight(),
-                            footHeight    = 121;
-		                
-		                if (footHeight + innerHeight - boxHeight >= (pervTotal * 48)) {
-		                    scrollHeight = pervTotal * 48;
-		                }
-                        if ($navHasSubnav.length == 1) {
+            if ($navObj.parents('ul.nav-subnav').last().is(':hidden')) {
+                $navObj.parents('ul.nav-subnav').last().slideDown(500, function(){
+                    $navHasSubnav.last().addClass('open');
+		            var scrollHeight  = 0,
+                        $scrollBox    = $('.lyear-layout-sidebar-info'),
+		                pervTotal     = $navHasSubnav.last().prevAll().length,
+		                boxHeight     = $scrollBox.outerHeight(),
+	                    innerHeight   = $('.sidebar-main').outerHeight(),
+                        thisScroll    = $scrollBox.scrollTop(),
+                        thisSubHeight = $(this).outerHeight(),
+                        footHeight    = 121;
+		            
+		            if (footHeight + innerHeight - boxHeight >= (pervTotal * 48)) {
+		                scrollHeight = pervTotal * 48;
+		            }
+                    if ($navHasSubnav.length == 1) {
+                        $scrollBox.animate({scrollTop: scrollHeight}, 300);
+                    } else {
+                        // 子菜单操作
+                        if (typeof($viSubHeight) != 'undefined' && $viSubHeight != null) {
+                            scrollHeight = thisScroll + thisSubHeight - $viSubHeight;
                             $scrollBox.animate({scrollTop: scrollHeight}, 300);
                         } else {
-                            // 子菜单操作
-                            if (typeof($viSubHeight) != 'undefined' && $viSubHeight != null) {
-                                scrollHeight = thisScroll + thisSubHeight - $viSubHeight;
+                            if ((thisScroll + boxHeight - $scrollBox[0].scrollHeight) == 0) {
+                                scrollHeight = thisScroll - thisSubHeight;
                                 $scrollBox.animate({scrollTop: scrollHeight}, 300);
-                            } else {
-                                if ((thisScroll + boxHeight - $scrollBox[0].scrollHeight) == 0) {
-                                    scrollHeight = thisScroll - thisSubHeight;
-                                    $scrollBox.animate({scrollTop: scrollHeight}, 300);
-                                }
                             }
                         }
                     }
                 });
-            });
+            }
         },
 
         /**
@@ -637,12 +634,14 @@ if (typeof jQuery === "undefined") {
             //$el.navTabMain    = $('#multitabs_main_0');
             $el.navToolsRight = $el.nav.find('.mt-nav-tools-right:first');
             $el.tabContent = $el.find('.tab-content:first');
-            if (options.nav.showTabs == false) {
+            //hide tab-header if maxTabs less than 1
+            if (options.nav.maxTabs <= 1) {
+                options.nav.maxTabs = 1;
                 $el.nav.hide();
             }
             //set the nav-panel width
             //var toolWidth = $el.nav.find('.mt-nav-tools-left:visible:first').width() + $el.nav.find('.mt-nav-tools-right:visible:first').width();
-            $el.navPanel.css('width', 'calc(100% - 132px)');
+            $el.navPanel.css('width', 'calc(100% - 147px)');
             self.options = options;
             return self;
         },
@@ -657,17 +656,12 @@ if (typeof jQuery === "undefined") {
                 $el = self.$element,
                 options = self.options,
                 storage, init = options.init,
-                param,
-                tempParam;
+                param;
             if (supportStorage(options.cache)) {
                 storage = self._storage();
                 self._resetStorage({});
                 $.each(storage, function (k, v) {
                     self.create(v, false);
-                    if (v.active) {
-                        tempParam = self._getParam(v);
-                        self._exist(tempParam).click();
-                    }
                 })
             }
             if ($.isEmptyObject(storage)) {
@@ -680,7 +674,7 @@ if (typeof jQuery === "undefined") {
                 }
             }
             //if no any tab actived, active the main tab
-            if (!$el.navPanelList.children('li.active').length) {
+            if (!$el.navPanelList.children('li').find('a.active').length) {
                 self.active($el.navPanelList.find('[data-type="main"]:first'));
             }
             return self;
@@ -704,7 +698,7 @@ if (typeof jQuery === "undefined") {
             });
             //active tab
             handler($el.nav, 'click', '.mt-nav-tab', function () {
-                self.active(this);
+                self.active(this, false);
                 self.activeMenu(this);
             });
 
@@ -797,7 +791,7 @@ if (typeof jQuery === "undefined") {
                 var param = self._getParam($navTab);
                 if (param.type !== 'main') {
                     menuData.push(
-                        {text: '关闭', onclick: function(){
+                        {text: 'Close', onclick: function(){
                             self.close($navTab);
                             menu.hide();
                             return false;
@@ -806,7 +800,7 @@ if (typeof jQuery === "undefined") {
                 }
                 
                 menuData.push(
-                    {text: '关闭其他', onclick: function(){
+                    {text: 'close', onclick: function(){
                        self.closeOthers($navTab.data('index'));
                        menu.hide();
                        return false;
@@ -819,7 +813,7 @@ if (typeof jQuery === "undefined") {
                     var item = menuData[i],
                         el   = $('<li/>');
                     
-                    el.append('<a/>');
+                    el.append('<a class="dropdown-item" />');
                     
                     var a = el.find('a');
                     
@@ -852,6 +846,35 @@ if (typeof jQuery === "undefined") {
                 $('#iframe-content').find('iframe').contents().find('body').on('click', function () {
                     menu.hide();
                 });
+            });
+            
+            // 双击事件
+            handler($el.nav, 'dblclick', '.mt-nav-tab', function (event) {
+                if (options.dbclickRefresh === true) {
+                    var $this    = $(this),
+                        $nav     = $this.closest('li'),
+                        $navTab  = self._getNavTab($nav),
+                        $tabPane = self._getTabPane($navTab),
+                        param    = $navTab.length ? self._getParam($navTab) : {},
+                        tempTabPane = $($tabPane);
+                    
+                    if (tempTabPane.is('iframe')) {
+                        tempTabPane.attr('src', param.url);
+                    } else {
+                        $.ajax({
+                            url: param.url,
+                            dataType: "html",
+                            success: function (callback) {
+                                tempTabPane.html(self.options.content.ajax.success(callback));
+                            },
+                            error: function (callback) {
+                                tempTabPane.html(self.options.content.ajax.error(callback));
+                            }
+                        });
+                    }
+                }
+                
+                return false;
             });
 
             //close tab
@@ -946,8 +969,8 @@ if (typeof jQuery === "undefined") {
             if (!param.url.length && !param.content.length) {
                 return false;
             }
-            //refresh
-            param.refresh = data.hasOwnProperty('refresh') || obj.hasOwnProperty('refresh') || options.refresh;
+            //isNewTab
+            param.isNewTab = data.hasOwnProperty('isNewTab') || obj.hasOwnProperty('isNewTab') || options.isNewTab;
             //iframe
             param.iframe = data.iframe || obj.iframe || isExtUrl(param.url) || options.iframe;
             //type
@@ -958,7 +981,7 @@ if (typeof jQuery === "undefined") {
             //active
             param.active = data.active || obj.active || false;
             //index
-            param.index = data.index || obj.index || getTabIndex(param.type, param.url);
+            param.index = data.index || obj.index || getTabIndex(param.type, options.nav.maxTabs);
             //id
             param.did = data.did || obj.did || this._generateId(param);
             return param;
@@ -1190,20 +1213,22 @@ if (typeof jQuery === "undefined") {
      * @type {}
      */
     $.fn.multitabs.defaults = {
-        selector: '.multitabs', //selector text to trigger multitabs.
-        iframe: false, //Global iframe mode, default is false, is the auto mode (for the self page, use ajax, and the external, use iframe)
-        cache: false,
-        class: '', //class for whole multitabs
-        type: 'info', //change the info content name, is not necessary to change.
+        selector: '.multitabs', // selector text to trigger multitabs.
+        iframe: false, // Global iframe mode, default is false, is the auto mode (for the self page, use ajax, and the external, use iframe)
+        cache: false, // 是否缓存当前打开的tab
+        class: '', // class for whole multitabs
+        type: 'info', // change the info content name, is not necessary to change.
         init: [],
-        refresh: false,
+        isNewTab: false, // 是否以新tab标签打开，为true时，每次点击都会打开新的tab
+        refresh: 'no', // iframe中页面是否刷新，'no'：'从不刷新'，'nav'：'点击菜单刷新'，'all'：'菜单和tab点击都刷新'
+        dbclickRefresh: false, // 双击刷新开启最好不要和refresh:'all'同时使用
         nav: {
             backgroundColor: '#f5f5f5', //default nav-bar background color
             class: '', //class of nav
             draggable: true, //nav tab draggable option
             fixed: false, //fixed the nav-bar
             layout: 'default', //it can be 'default', 'classic' (all hidden tab in dropdown list), and simple
-            showTabs: true, // 是否显示Tab标签栏
+            maxTabs: 15, //Max tabs number (without counting main tab), when is 1, hide the whole nav
             maxTitleLength: 25, //Max title length of tab
             showCloseOnHover: false, //while is true, show close button in hover, if false, show close button always
             style: 'nav-tabs' //can be nav-tabs or nav-pills
@@ -1229,8 +1254,8 @@ if (typeof jQuery === "undefined") {
                 title: 'Tab', //default tab's tittle
                 dropdown: '<i class="mdi mdi-menu"></i>', //right tools dropdown name
                 showActivedTab: '显示当前选项卡', //show active tab
-                closeAllTabs: '关闭所有标签页', //close all tabs
-                closeOtherTabs: '关闭其他标签页', //close other tabs
+                closeAllTabs: 'Close所有标签页', //close all tabs
+                closeOtherTabs: 'Close其他标签页', //close other tabs
             }
         }
     };
