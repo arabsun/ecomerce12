@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminController;
+use \App\Http\Controllers\Auth\AdminLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +16,36 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('fronend.index');
+    return view('frontend.index');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('admin-login',[AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::get('/insert',[AdminLoginController::class, 'insert'])->name('insert');
+    Route::post('admin/auth',[AdminLoginController::class, 'loginAdmin'])->name('admin.auth');
+});
+Route::group(['middleware' => 'is.admin','prefix'=>'backend'], function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/logout',[AdminLoginController::class, 'logout'])->name('admin.logout');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+});
+
+Route::get('/clear', function() {
+
+    $exitCode = Artisan::call('config:cache');
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('view:clear');
+    $exitCode = Artisan::call('route:clear');
+    $exitCode = Artisan::call('clear-compiled');
+    return 'DONE';
+});
