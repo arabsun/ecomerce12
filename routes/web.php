@@ -16,7 +16,7 @@ use \App\Http\Controllers\Auth\AdminLoginController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('frontend.index');
 });
 
 Auth::routes();
@@ -42,4 +42,15 @@ Route::group(['middleware' => 'is.admin','prefix'=>'backend'], function () {
     Route::get('/reset-password', [AdminController::class, 'resetPassword'])->name('admin.reset.password');
     Route::post('/reset-password-form', [AdminController::class, 'resetPasswordForm'])->name('admin.reset.password.form');
 
+});
+
+Route::get('/clear', function() {
+
+    $exitCode = Artisan::call('config:cache');
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('view:clear');
+    $exitCode = Artisan::call('route:clear');
+    $exitCode = Artisan::call('clear-compiled');
+    return 'DONE';
 });
