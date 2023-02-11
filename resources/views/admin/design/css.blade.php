@@ -1,13 +1,13 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <link rel="stylesheet" href="{{asset('public/admin/asset/css/materialdesignicons.min.css')}}">
 <link rel="stylesheet" href="{{asset('public/admin/asset/css/bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{asset('public/admin/asset/js/bootstrap-multitabs/multitabs.min.css')}}">
 <link rel="stylesheet" href="{{asset('public/admin/asset/css/tagify.css')}}">
 <link rel="stylesheet" href="{{asset('public/admin/asset/css/datatable.css')}}">
-<link rel="stylesheet" href="{{asset('public/admin/asset/css/tagify.css')}}">
+<link rel="stylesheet" href="{{asset('public/admin/asset/css/animate.min.css')}}">
 <link rel="stylesheet" href="{{asset('public/admin/asset/css/style.min.css')}}">
 <link rel="stylesheet" href="{{asset('public/admin/asset/css/colorpicker.css')}}">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/js/all.min.js"></script>
 
 <style>

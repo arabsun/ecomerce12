@@ -10,118 +10,112 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link href="{{asset('public/admin/asset/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.1.96/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="{{asset('public/admin/asset/js/bootstrap-multitabs/multitabs.min.css')}}" rel="stylesheet">
-    <link href="{{asset('public/admin/asset/css/style.min.css')}}" rel="stylesheet">
-    <link href="{{asset('public/admin/asset/css/animate.min.css')}}" rel="stylesheet">
-    <link href="{{asset('public/admin/asset/css/tagify.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('public/admin/asset/css/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/admin/asset/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/admin/asset/js/bootstrap-multitabs/multitabs.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/admin/asset/css/animate.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/admin/asset/css/tagify.css')}}">
 
-    @yield('meta')
-    @yield('style')
 
-    <style>
-        iframe {
-            padding-top: 50px !important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('public/admin/asset/css/style.min.css')}}">
+@yield('style')
+
+<style>
+    iframe {
+        padding-top: 50px !important;
+    }
+</style>
 </head>
 
 <body>
-<div class="loader"></div>
+    <div class="loader"></div>
 <div class="lyear-layout-web">
     <div class="lyear-layout-container">
         <aside class="lyear-layout-sidebar">
             <div id="logo" class="sidebar-header">
-                <a href="index.html">
-                    <img class="navbar-brand img-avatar-48 " src="http://netronsoft.com/assets/images/16714627711.svg" title="LightYear"
-                                          alt="LightYear" /></a>
+                <a href="{{route('admin.dashboard')}}"><img class="navbar-brand img-avatar-48 " src="http://netronsoft.com/assets/images/16714627711.svg" title="LightYear" alt="LightYear" /></a>
             </div>
-            <div class="lyear-layout-sidebar-info lyear-scroll">
-
+            <div class="lyear-layout-sidebar-info lyear-scroll ">
 
                 <nav class="sidebar-main">
-                    <ul class="nav nav-drawer">
-                        <li class="nav-item active">
-                            <a class="multitabs" href="#"><i class="mdi mdi-format-align-justify"></i> <span>Dashboard</span></a> </li>
-
+                    <ul class="nav-drawer">
+                        <li class="nav-item active font-weight-bold"> <a class="multitabs" href="{{route('admin.master')}}"><i class="mdi mdi-rocket"></i> <span class="font-weight-bold">Dashboard</span></a> </li>
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi  mdi-account"></i> <span>Users/Suppliers</span></a>
+                            <a href="javascript:void(0)"><i class="mdi mdi-account"></i> <span class="font-weight-bold">Users/Suppliers</span></a>
                             <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Manage Clients</a> </li>
-                                <li> <a class="multitabs" href="#">Client Group</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.client.index')}}">Manage Clients</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.group.index')}}">Client Group</a> </li>
                             </ul>
                         </li>
 
+
+
+
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class=" mdi  mdi-cart"></i> <span>Products and Groups</span></a>
+                            <a href="javascript:void(0)"><i class="mdi mdi-cart"></i> <span class="font-weight-bold">Product/Service</span></a>
                             <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Manage Products</a> </li>
-                                <li> <a class="multitabs" href="#">Mange Groups </a> </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class=" mdi  mdi-cart"></i> <span>Orders</span></a>
-                            <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Manage Order</a> </li>
-                                <li> <a class="multitabs" href="#">Mange Delivery </a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.product.catalog.index')}}">Catalog/Cart</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.service.product.index')}}">Services</a> </li>
                             </ul>
                         </li>
 
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-account"></i> <span>CMS/Blog</span></a>
+                            <a href="javascript:void(0)"><i class="mdi mdi-message-text"></i> <span class="font-weight-bold">CMS/Blog</span></a>
                             <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Blog</a> </li>
-                                <li> <a class="multitabs" href="#">Sliders</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.blog.index')}}">Blog</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.slider.index')}}">Sliders</a> </li>
                             </ul>
                         </li>
 
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-account"></i> <span>Support Ticket</span></a>
+                            <a href="javascript:void(0)"><i class="mdi mdi-spin mdi-settings"></i> <span class="font-weight-bold">Settings</span></a>
                             <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Support Ticket</a> </li>
-                                <li> <a class="multitabs" href="#">Priority</a> </li>
-                                <li> <a class="multitabs" href="#">Status</a> </li>
-                                <li> <a class="multitabs" href="#">My Tickets</a> </li>
-                                <li> <a class="multitabs" href="#">Category</a> </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-account"></i> <span>Marketing</span></a>
-                            <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Promo codes</a> </li>
-                                <li> <a class="multitabs" href="#">Popup messages</a> </li>
-                                <li> <a class="multitabs" href="#">Status</a> </li>
-                                <li> <a class="multitabs" href="#">News letters</a> </li>
-                                <li> <a class="multitabs" href="#">Settings</a> </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-account"></i> <span>Settings</span></a>
-                            <ul class="nav nav-subnav">
-                                <li> <a class="multitabs" href="#">Basic Information</a> </li>
-                                <li> <a class="multitabs" href="#">Menu Setting</a> </li>
-                                <li> <a class="multitabs" href="#">Seo Setting</a> </li>
-                                <li> <a class="multitabs" href="#">Email Template</a> </li>
-                                <li> <a class="multitabs" href="#">SMS Template</a> </li>
-                                <li> <a class="multitabs" href="#">Email Setting</a> </li>
-                                <li> <a class="multitabs" href="#">SMS Setting</a> </li>
-                                <li> <a class="multitabs" href="#">Maintenance</a> </li>
-                                <li> <a class="multitabs" href="#">Seo Setting</a> </li>
-                                <li> <a class="multitabs" href="#">Homepage SEO Setup</a> </li>
-                                <li> <a class="multitabs" href="#">Social Login</a> </li>
-                                <li> <a class="multitabs" href="#">Notifications Setting</a></li>
-                                <li> <a class="multitabs" href="#">Email Config</a></li>
-                                <li> <a class="multitabs" href="#">Recaptcha Setting</a></li>
-                                <li> <a class="multitabs" href="#">Currency Settings</a></li>
-                                <li> <a class="multitabs" href="#">Language Settings</a></li>
-                                <li> <a class="multitabs" href="#">Manage Country</a></li>
+                                <li> <a class="multitabs" href="{{route('admin.setting.index')}}">Basic Information</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.menu.index')}}">Menu Setting</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.seo.index')}}">Seo Setting</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.cookie')}}">Cookie Setting</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.social.login')}}">Social Login</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.mail.config')}}">Email Config</a></li>
+                                <li> <a class="multitabs" href="{{route('admin.captcha.setting')}}">Recaptcha Setting</a></li>
+                                <li> <a class="multitabs" href="{{route('admin.currency.index')}}">Currency Settings</a></li>
+                                <li> <a class="multitabs" href="{{route('admin.country.index')}}">Country Settings </a></li>
+                                <li> <a class="multitabs" href="{{route('admin.role.manage')}}">Manage Role </a></li>
+                                <li> <a class="multitabs" href="{{route('admin.staff.manage')}}">Manage Staff </a></li>
+                                <li> <a class="multitabs" href="{{route('language.index')}}">Manage Language </a></li>
+                                <li> <a class="multitabs" href="{{route('admin.gateway.index')}}">Payment Gateway </a></li>
+
+
 
                             </ul>
                         </li>
+                        <li class="nav-item nav-item-has-subnav">
+                            <a href="javascript:void(0)"><i class="mdi mdi-shopping"></i> <span class="font-weight-bold">Manage Orders</span></a>
+                            <ul class="nav nav-subnav">
+                                <li> <a class="multitabs" href="{{route('admin.order.index')}}">Orders</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.service.order.index')}}">Service Orders</a> </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item nav-item-has-subnav">
+                            <a href="javascript:void(0)"><i class="mdi mdi-television-guide"></i> <span class="font-weight-bold">Manage KYC</span></a>
+                            <ul class="nav nav-subnav">
+                                <li> <a class="multitabs" href="{{route('admin.kyc.index')}}">KYC Manager</a> </li>
+                                <li> <a class="multitabs" href="{{route('admin.kyc.pending')}}">Pending KYC </a> </li>
+                            </ul>
+                        </li>
+
+
+
+                        <li class="nav-item "> <a class="multitabs" href="{{route('admin.ticket.manage')}}"><i class="mdi mdi-google-analytics"></i> <span class="font-weight-bold">Report</span></a> </li>
+
+                        <li class="nav-item "> <a class="multitabs" href="{{route('admin.ticket.manage')}}"><i class="mdi mdi-comment-multiple-outline"></i> <span class="font-weight-bold"> Support Ticket</span></a> </li>
+
                     </ul>
                 </nav>
 
+                <div class="sidebar-footer fixed-bottom">
+                    <p class="copyright">Copyright © 2023. <a target="_blank" href="http://netronsoft.com">netronsoft</a> All rights reserved.</p>
+                </div>
             </div>
 
         </aside>
@@ -140,23 +134,22 @@
 
                 <ul class="navbar-right d-flex align-items-center">
 
-                    <!--切换主题配色-->
                     <li class="dropdown dropdown-profile">
                         <a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">
-                            <img class="img-avatar img-avatar-48 m-r-10" src="{{asset('assets/images/'.Auth::guard('admin')->user()->photo)}}" alt="user" />
-                            <span>{{Auth::guard('admin')->user()->username}} </span>
+                            <img class="img-avatar img-avatar-48 m-r-10" src="{{asset('public/admin/asset/images/'.Auth::guard('admin')->user()->photo)}}" alt="user" />
+                            <span>{{Auth::guard('admin')->user()->name}} </span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
+                        <ul class="dropdown-menu dropdown-menu-right ">
                             <li>
-                                <a class="multitabs dropdown-item" data-url="{{route('admin.profile')}}" href="javascript:void(0)"><i class="mdi mdi-account"></i> profile</a>
+                                <a class="multitabs dropdown-item " data-url="{{route('admin.profile')}}" href="javascript:void(0)"><i class="mdi mdi-account"></i> profile</a>
                             </li>
                             <li>
-                                <a class="multitabs dropdown-item" data-url="#" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i>  change Password</a>
+                                <a class="multitabs dropdown-item" data-url="{{route('admin.password')}}" href="javascript:void(0)"><i class="mdi mdi-lock-outline"></i>  change Password</a>
                             </li>
 
                             <li class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('admin.logout') }}"><i class="mdi mdi-logout-variant"></i>  sign out</a>
+                                <a class="dropdown-item bg-danger" href="{{ route('admin.logout') }}"><i class="mdi mdi-logout-variant"></i>  sign out</a>
                             </li>
                         </ul>
                     </li>
@@ -186,21 +179,23 @@
 <script src="{{asset('public/admin/asset/js/tagify.js')}}"></script>
 <script src="{{asset('public/admin/asset/js/index.min.js')}}"></script>
 <script src="{{asset('public/admin/asset/js/main.min.js')}}"></script>
+
 <script src="{{asset('public/admin/asset/js/Chart.min.js')}}"></script>
+
 
 
 <script>
 
 
 
-    $(window).on('load','iframe',function(){
-        $('.loader_image').hide();
-    })
+$(window).on('load','iframe',function(){
+    $('.loader_image').hide();
+})
 
 
-    $(document).on('click','.multitabs',function(){
-        $('.loader_image').show();
-    })
+$(document).on('click','.multitabs',function(){
+    $('.loader_image').show();
+})
 
 
 
@@ -209,18 +204,18 @@
         refresh : 'no',
         nav: {
             backgroundColor: '#ffffff',
-            maxTabs : 35,
+            maxTabs : 15,
             layout : 'simple'
         },
         init : [{
             type : 'main',
             title : 'Dashboard',
-            url:"{!! route('admin.main'); !!}"
+            url:"{{ route('admin.master')}}"
         }]
     });
 
     $(window).on('load', ()=>{
-        $('.loader').fadeOut(500)
+        $('.loader').fadeOut(2000)
     })
 
 

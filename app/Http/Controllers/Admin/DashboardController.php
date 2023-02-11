@@ -11,11 +11,22 @@ use Illuminate\Support\Facades\Validator;
 class DashboardController extends Controller
 {
 
+    public function master()
+    {
+
+        return view('admin.dashboard.main');
+    }
+
+
+    public function index()
+    {
+        return view('admin.dashboard.dashboard');
+    }
 
 
     public function profile()
     {
-        return view('dashboard.profile');
+        return view('admin.dashboard.profile');
     }
 
 
@@ -25,7 +36,7 @@ class DashboardController extends Controller
         $rules =
             [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:admins,email,' . Auth::guard('admin')->user()->id,
+                'email' => 'required|string|email|max:255|unique:admin,email,' . Auth::guard('admin')->user()->id,
                 'phone' => 'required|string|max:255',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ];
@@ -57,7 +68,7 @@ class DashboardController extends Controller
 
     public function password(Request $request)
     {
-        return view('dashboard.password');
+        return view('admin.dashboard.password');
     }
 
 

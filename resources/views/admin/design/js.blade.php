@@ -20,7 +20,6 @@
 
 
 
-
 <script src="{{asset('public/admin/asset/js/jquery.min.js')}}"></script>
 <script src="{{asset('public/admin/asset/js/popper.min.js')}}"></script>
 <script src="{{asset('public/admin/asset/js/bootstrap.min.js')}}"></script>
@@ -129,9 +128,9 @@ $(document).on('change','.check_type_amount',function(){
       if($('#amount_paid').is(':checked')){
         amount_paid = 1;
       }
-      {{--$.get('{{route('admin.financial.load')}}',{generate_invoice:generate_invoice,amount_paid:amount_paid, type:type },function(data){--}}
-      {{--  $('#show_financial_form').html(data);--}}
-      {{--})--}}
+      $.get('{{route('admin.financial.load')}}',{generate_invoice:generate_invoice,amount_paid:amount_paid, type:type },function(data){
+        $('#show_financial_form').html(data);
+      })
   }
 
 
@@ -139,13 +138,13 @@ $(document).on('change','.check_type_amount',function(){
 
       let status = $(this).attr('data');
       let clinet_id = $(this).attr('data-user');
-      {{--let $this = $(this);--}}
-      {{--$.get('{{route('admin.client.phone.verify')}}',{status:status,clinet_id:clinet_id  },function(data){--}}
-      {{--  if(data.status == 1){--}}
-      {{--    $this.removeClass('text-danger').addClass('text-success').text('Verified').attr('data',1);--}}
-      {{--  }else{--}}
-      {{--    $this.removeClass('text-success').addClass('text-danger').text('Unverified').attr('data',0);--}}
-      {{--  }--}}
+      let $this = $(this);
+      $.get('{{route('admin.client.phone.verify')}}',{status:status,clinet_id:clinet_id  },function(data){
+        if(data.status == 1){
+          $this.removeClass('text-danger').addClass('text-success').text('Verified').attr('data',1);
+        }else{
+          $this.removeClass('text-success').addClass('text-danger').text('Unverified').attr('data',0);
+        }
       })
   })
 
@@ -278,21 +277,21 @@ $(document).on('change','.check_type_amount',function(){
 
     //kyc
     $(document).on('change','.kyc_type',function(){
-    {{--   var status = confirm('Are you sure you want to change kyc type?');--}}
-    {{--    if(status){--}}
-    {{--        $.get('{{route('admin.kyc.type')}}',{kyc_type:$(this).val()},--}}
-    {{--        function (res) {--}}
-    {{--            if(res.error) $.notify(res.error,'error')--}}
-    {{--            else {--}}
-    {{--                $.notify(res.success,'success')--}}
+       var status = confirm('Are you sure you want to change kyc type?');
+        if(status){
+            $.get('{{route('admin.kyc.type')}}',{kyc_type:$(this).val()},
+            function (res) {
+                if(res.error) $.notify(res.error,'error')
+                else {
+                    $.notify(res.success,'success')
 
-    {{--            }--}}
-    {{--        }--}}
-    {{--    );--}}
-    {{--    }else{--}}
-    {{--        return false;--}}
-    {{--    }--}}
-    {{--})--}}
+                }
+            }
+        );
+        }else{
+            return false;
+        }
+    })
 
 
     //country
@@ -380,29 +379,29 @@ $(document).on('change','.check_type_amount',function(){
         })
 
         //language
-        {{--$('.update').on('change', function () {--}}
-        {{--    var url = "{{route('update-status.language')}}"--}}
-        {{--    var val = $(this).val()--}}
-        {{--    var data = {--}}
-        {{--       id:val,--}}
-        {{--       _token:"{{csrf_token()}}"--}}
-        {{--    }--}}
-        {{--    $(this).attr('disabled',true)--}}
-        {{--    $.post(url,data,function(response) {--}}
-        {{--       if(response.error){--}}
-        {{--         $.notify(response.error,'error')--}}
-        {{--          return false;--}}
-        {{--       }--}}
-        {{--       $(document).find('.cswitch input[type=checkbox]').each(function() {--}}
-        {{--          if ($(this).is(":checked")) {--}}
-        {{--             $(this).attr('checked',false)--}}
-        {{--             $(this).attr('disabled',false)--}}
-        {{--          }--}}
-        {{--       });--}}
-        {{--       $.notify(response.success,'success')--}}
-        {{--    })--}}
+        $('.update').on('change', function () {
+            var url = "{{route('update-status.language')}}"
+            var val = $(this).val()
+            var data = {
+               id:val,
+               _token:"{{csrf_token()}}"
+            }
+            $(this).attr('disabled',true)
+            $.post(url,data,function(response) {
+               if(response.error){
+                 $.notify(response.error,'error')
+                  return false;
+               }
+               $(document).find('.cswitch input[type=checkbox]').each(function() {
+                  if ($(this).is(":checked")) {
+                     $(this).attr('checked',false)
+                     $(this).attr('disabled',false)
+                  }
+               });
+               $.notify(response.success,'success')
+            })
 
-        {{-- });--}}
+         });
 
          $('.remove').on('click',function () {
             $('#removeModal').find('input[name=id]').val($(this).data('id'))

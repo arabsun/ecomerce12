@@ -150,7 +150,7 @@ if (typeof jQuery === "undefined") {
             '</div>' +
             '<div class="tab-content mt-tab-content " > </div>' +
             '</div>',
-        navTab: '<a data-id="{navTabId}" class="nav-link mt-nav-tab" data-type="{type}" data-index="{index}" data-url="{url}">{title}</a>',
+        navTab: '<a data-id="{navTabId}" class="nav-link mt-nav-tab " data-type="{type}" data-index="{index}" data-url="{url}">{title}</a>',
         closeBtn: ' <i class="mt-close-tab mdi mdi-close" style="{style}"></i>',
         ajaxTabPane: '<div id="{tabPaneId}" class="tab-pane {class}">{content}</div>',
         iframeTabPane: '<iframe id="{tabPaneId}" class="tab-pane {class}"  width="100%" height="100%" frameborder="0" src="" seamless></iframe>'
@@ -341,7 +341,7 @@ if (typeof jQuery === "undefined") {
             self._fixTabContentLayout($tabPane);
             //fill tab pane
             self._fillTabPane($tabPane, navTabParam, isNavBar);
-            
+
             return self;
         },
         /**
@@ -355,7 +355,7 @@ if (typeof jQuery === "undefined") {
             //if navTab-pane empty, load content
             if (!$tabPane.html()) {
                 if ($tabPane.is('iframe')) {
-                  
+
                     //if (!$tabPane.attr('src')) {
                     if ((!$tabPane.attr('src') && options.refresh == 'no') || (options.refresh == 'nav' && isNavBar) || options.refresh == 'all'){
                         $tabPane.attr('src', param.url);
@@ -492,7 +492,7 @@ if (typeof jQuery === "undefined") {
             var self = this,
                 $el = self.$element,
                 findTab;
-            
+
             if (!retainTab) {
                 findTab = $el.navPanelList.find('li a:not([data-type="main"],.active)');
             } else {
@@ -500,7 +500,7 @@ if (typeof jQuery === "undefined") {
                     if (retainTab != $(this).data('index')) return this;
                 });
             }
-          
+
             findTab.each(function () {
                 var $navTab = $(this);
                 self._delStorage($navTab.attr('data-id')); //remove tab from session storage
@@ -544,7 +544,7 @@ if (typeof jQuery === "undefined") {
             self.activeMenu($el.navPanelList.find('a[data-type="main"]:first'));
             return self;
         },
-        
+
         /**
          * 左侧导航变化
          */
@@ -553,7 +553,7 @@ if (typeof jQuery === "undefined") {
             var $navObj       = $("a[href$='" + $(navTab).data('url') + "']"),   // 当前url对应的左侧导航对象
                 $navHasSubnav = $navObj.parents('.nav-item'),
                 $viSubHeight  = $navHasSubnav.siblings().find('.nav-subnav:visible').outerHeight();
-            
+
             $('.nav-item').each(function(i){
                 if ($(this).hasClass('active') && !$navObj.parents('.nav-item').last().hasClass('active')) {
                     $(this).removeClass('active').removeClass('open');
@@ -563,17 +563,17 @@ if (typeof jQuery === "undefined") {
                     }
                 }
             });
-            
+
             $('.nav-drawer').find('li').removeClass('active');
             $navObj.parent('li').addClass('active');
             $navHasSubnav.first().addClass('active');
-            
+
             // 当前菜单无子菜单
             if (!$navObj.parents('.nav-item').first().is('.nav-item-has-subnav')) {
                 var hht = 48 * ( $navObj.parents('.nav-item').first().prevAll().length - 1 );
                 $('.lyear-layout-sidebar-info').animate({scrollTop: hht}, 300);
             }
-            
+
             if ($navObj.parents('ul.nav-subnav').last().is(':hidden')) {
                 $navObj.parents('ul.nav-subnav').last().slideDown(500, function(){
                     $navHasSubnav.last().addClass('open');
@@ -585,7 +585,7 @@ if (typeof jQuery === "undefined") {
                         thisScroll    = $scrollBox.scrollTop(),
                         thisSubHeight = $(this).outerHeight(),
                         footHeight    = 121;
-		            
+
 		            if (footHeight + innerHeight - boxHeight >= (pervTotal * 48)) {
 		                scrollHeight = pervTotal * 48;
 		            }
@@ -753,7 +753,7 @@ if (typeof jQuery === "undefined") {
                     });
                 });
             }
-            
+
             // 右键菜单
             handler($el.nav, 'contextmenu', '.mt-nav-tab', function (event) {
                 event.preventDefault();
@@ -763,11 +763,11 @@ if (typeof jQuery === "undefined") {
                     $navTab  = self._getNavTab($nav),
                     $tabPane = self._getTabPane($navTab),
                     param    = $navTab.length ? self._getParam($navTab) : {};
-                
+
                 var menuData = [
                   {text: '刷新', onclick: function(){
                       var tempTabPane = $($tabPane);
-                      
+
                       if (tempTabPane.is('iframe')) {
                           tempTabPane.attr('src', param.url);
                       } else {
@@ -783,11 +783,11 @@ if (typeof jQuery === "undefined") {
                           });
                       }
                       menu.hide();
-                      
+
                       return false;
                   }}
                 ];
-                
+
                 var param = self._getParam($navTab);
                 if (param.type !== 'main') {
                     menuData.push(
@@ -798,7 +798,7 @@ if (typeof jQuery === "undefined") {
                         }}
                     );
                 }
-                
+
                 menuData.push(
                     {text: 'close', onclick: function(){
                        self.closeOthers($navTab.data('index'));
@@ -806,24 +806,24 @@ if (typeof jQuery === "undefined") {
                        return false;
                     }}
                 );
-                
+
                 var l = menuData.length, i;
-                
+
                 for (i = 0; i < l; i++) {
                     var item = menuData[i],
                         el   = $('<li/>');
-                    
+
                     el.append('<a class="dropdown-item" />');
-                    
+
                     var a = el.find('a');
-                    
+
                     a.on('click', item.onclick);
                     a.css('cursor', 'pointer');
                     a.html(item.text);
-                    
+
                     menu.append(el);
                 }
-                
+
                 var currentMenu = $("#contextify-menu");
                 if (currentMenu.length > 0) {
                     if(currentMenu !== menu) {
@@ -838,8 +838,8 @@ if (typeof jQuery === "undefined") {
                     y = (menu.height() + event.clientY < $(window).height()) ? clientTop : clientTop - menu.height();
 
                 menu.css('top', y).css('left', x).css('position', 'fixed').show();
-              
-                
+
+
                 $(this).parents().on('click', function () {
                     menu.hide();
                 });
@@ -847,7 +847,7 @@ if (typeof jQuery === "undefined") {
                     menu.hide();
                 });
             });
-            
+
             // 双击事件
             handler($el.nav, 'dblclick', '.mt-nav-tab', function (event) {
                 if (options.dbclickRefresh === true) {
@@ -857,7 +857,7 @@ if (typeof jQuery === "undefined") {
                         $tabPane = self._getTabPane($navTab),
                         param    = $navTab.length ? self._getParam($navTab) : {},
                         tempTabPane = $($tabPane);
-                    
+
                     if (tempTabPane.is('iframe')) {
                         tempTabPane.attr('src', param.url);
                     } else {
@@ -873,7 +873,7 @@ if (typeof jQuery === "undefined") {
                         });
                     }
                 }
-                
+
                 return false;
             });
 

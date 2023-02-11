@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Cache::clear();
+        view()->composer('*',function($settings){
+            $settings->with('gs', cache()->remember('generalsettings', now()->addDay(), function () {
+                return DB::table('generalsettings')->first();
+            }));
+        });
     }
 }
