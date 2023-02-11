@@ -34,7 +34,12 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('admin/auth',[AdminLoginController::class, 'loginAdmin'])->name('admin.auth');
 });
 Route::group(['middleware' => 'is.admin','prefix'=>'backend'], function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/logout',[AdminLoginController::class, 'logout'])->name('admin.logout');
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::post('/profile-form', [AdminController::class, 'profileForm'])->name('admin.profile.form');
+    Route::get('/reset-password', [AdminController::class, 'resetPassword'])->name('admin.reset.password');
+    Route::post('/reset-password-form', [AdminController::class, 'resetPasswordForm'])->name('admin.reset.password.form');
+
 });

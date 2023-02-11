@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Session;
 
 class AdminLoginController extends Controller
 {
@@ -44,7 +45,7 @@ class AdminLoginController extends Controller
             $this->incrementLoginAttempts($request);
             return $this->sendFailedLoginResponse($request);
         }catch (\Exception $e){
-            $request->session()->flash('warning', __('The username or password are incorrect'));
+            Session::flash('warning', __('The username or password are incorrect'));
             return redirect()->back();
         }
     }
@@ -52,9 +53,9 @@ class AdminLoginController extends Controller
     {
         $this->guard()->logout();
 
-        $request->session()->invalidate();
+        Session::invalidate();
 
-        $request->session()->regenerateToken();
+        Session::regenerateToken();
 
         if ($response = $this->loggedOut($request)) {
             return $response;
@@ -75,7 +76,7 @@ class AdminLoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ( $user ) {// do your magic here
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.index');
         }
         return redirect('/home');
     }

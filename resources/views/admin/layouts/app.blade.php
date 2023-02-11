@@ -34,57 +34,14 @@
             <!--End content-->
         </div>
     </div>
+    <div class="lyear-layout-web">
+
     <script type="text/javascript" src="{{asset('public/admin/asset/js/jquery.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('public/admin/asset/js/bootstrap.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('public/admin/asset/js/perfect-scrollbar.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('public/admin/asset/js/bootstrap-multitabs/multitabs.js')}}"></script>
     <script type="text/javascript" src="{{asset('public/admin/asset/js/index.min.js')}}"></script>
 
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success alert-block alert-message-admin">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-    @endif
-
-
-    @if ($message = Session::get('error'))
-        <div class="alert alert-danger alert-block alert-message-admin">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-    @endif
-
-
-    @if ($message = Session::get('warning'))
-        <div class="alert alert-warning alert-block alert-message-admin">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-    @endif
-
-
-    @if ($message = Session::get('info'))
-        <div class="alert alert-info alert-block alert-message-admin">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-    @endif
-
-
-    @if ($errors->any())
-        <div class="alert alert-danger alert-message-admin">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            Please check the form below for errors
-        </div>
-    @endif
-    <style>
-        .alert-message-admin{
-            position: absolute;
-            bottom: 3%;
-            right: 1%;
-        }
-    </style>
     @yield('script')
 </body>
 </html>

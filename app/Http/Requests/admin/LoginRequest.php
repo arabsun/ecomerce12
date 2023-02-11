@@ -37,10 +37,10 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required'             => __('username is required'),
-            'username.max'             => __('username must be less than 16 characters'),
-            'password.required'             => __('password is required'),
-            'password.max'             => __('password must be less than 16 characters'),
+            'username.required'             => __('Username field is required'),
+            'username.max'             => __('Username must be less than 16 characters'),
+            'password.required'             => __('Password field is required'),
+            'password.max'             => __('Password must be less than 16 characters'),
 
         ];
     }

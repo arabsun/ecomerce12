@@ -3496,7 +3496,7 @@ dd, dt {
 }
 @media screen and (max-width: 430px) {
     .dropdown-skin .dropdown-menu {
-        left: -80px!important; 
+        left: -80px!important;
     }
     .nav-step .nav-step-item p {
         display: none;
@@ -4574,4 +4574,8 @@ body[data-theme='translucent'] {
 [data-sidebarbg*='color_'] .nav-drawer > .active > a:focus,
 [data-sidebarbg*='color_'] .nav-drawer > .active > a:active {
     border-color: rgba(255, 255, 255, .35);
+}
+.invalid-feedback{
+    font-size: 12px;
+    color: #90111A;
 }
