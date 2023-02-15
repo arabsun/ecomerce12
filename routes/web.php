@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
-use \App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\frontend\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +17,28 @@ use \App\Http\Controllers\Auth\AdminLoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('frontend.index');
-});
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+
+});
+
+Route::group(['middleware' => 'is.user','prefix'=>'dashboard'], function () {
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/', 'index')->name('frontend.dashboard');
+        Route::post('/content', 'content')->name('frontend.content');
+        Route::get('/{content?}', 'index')->name('frontend.page.content');
+
+        Route::get('/logout', 'logout')->name('frontend.logout');
+
+    });
+
+
+});
+Route::get('/home', [\App\Http\Controllers\frontend\HomeController::class, 'index'])->name('home');
 
 
 
